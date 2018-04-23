@@ -22,7 +22,7 @@ file_basename = os.path.splitext(video_file)[0]
 def check_lib(name):
     from distutils.spawn import find_executable
     return find_executable(name) is not None
-    	
+        
 # First check that all permissions are valid:
 # 0. Required libraries (ffmpeg, ffprobe) are installed and available
 # 1. File is readable and directory is writable, so we can create a subfolder for assets
@@ -30,11 +30,11 @@ def check_lib(name):
 
 # 0. Check for required libraries
 if check_lib('ffmpeg') and check_lib('ffprobe') is None:
-	sys.exit('Error: This script requires ffmpeg and ffprobe libraries be available in the $PATH!')
+    sys.exit('Error: This script requires ffmpeg and ffprobe libraries be available in the $PATH!')
 
 # 1. Check for permissions
 if not os.access(os.getcwd(), os.W_OK) or not os.access(video_file, os.R_OK):
-	sys.exit('Error: Directory is writable and file is readable!')
+    sys.exit('Error: Directory is writable and file is readable!')
 
 def md5(fname):
     hash_md5 = hashlib.md5()
@@ -46,25 +46,25 @@ def md5(fname):
 s_duration = subprocess.check_output(['ffprobe', '-i', video_file, '-show_entries', 'format=duration', '-v', 'quiet', '-of', 'csv=%s' % ('p=0')])
 f_duration = float(s_duration.strip())
 i_duration = int(f_duration)
-	
+    
 # Based on the duration of the video, determine the number of segments
 # Minimally, create two segments twenty at most, otherwise every three minutes
 
 if i_duration < 300:
-	segments = 2
+    segments = 2
 elif i_duration >= 3600:
-	segments = 20
+    segments = 20
 else:
-	segments = i_duration / 180
+    segments = i_duration / 180
 
 chunk_size = i_duration/segments
 
 if args.verbose is True:
-	print('Video File Name: %s' % video_file)
-	print('Float Duration: %f' % f_duration)
-	print('Int Duration: %d' % i_duration)
-	print('Segments: %d' % segments)
-	print('Chunk Size: %d' % chunk_size)
+    print('Video File Name: %s' % video_file)
+    print('Float Duration: %f' % f_duration)
+    print('Int Duration: %d' % i_duration)
+    print('Segments: %d' % segments)
+    print('Chunk Size: %d' % chunk_size)
 
 # FFMPEG Settings
 clip_duration=5
@@ -77,12 +77,12 @@ os.mkdir(file_basename)
 chunk_step=0
 file_part=1
 while chunk_step < i_duration:
-	pad = '%03d' % file_part
-	subprocess.call(['ffmpeg', '-y', '-ss', str(chunk_step), '-t', str(clip_duration), '-i', video_file, '-vf', 'fps=%s,scale=%s:-1:flags=lanczos,palettegen' % (clip_fps, clip_scale), 'palette-%s.png' % (pad)])
-	subprocess.call(['ffmpeg', '-ss', str(chunk_step), '-t', str(clip_duration), '-i', video_file, '-i', 'palette-%s.png' % (pad), '-filter_complex', 'fps=%s,scale=%s:-1:flags=lanczos[x];[x][1:v] paletteuse' % (clip_fps, clip_scale), '%s/%s-%s.gif' % (file_basename, file_basename, pad)])
-	os.remove('palette-%s.png' % pad)
-	file_part += 1
-	chunk_step = chunk_step + chunk_size
+    pad = '%03d' % file_part
+    subprocess.call(['ffmpeg', '-y', '-ss', str(chunk_step), '-t', str(clip_duration), '-i', video_file, '-vf', 'fps=%s,scale=%s:-1:flags=lanczos,palettegen' % (clip_fps, clip_scale), 'palette-%s.png' % (pad)])
+    subprocess.call(['ffmpeg', '-ss', str(chunk_step), '-t', str(clip_duration), '-i', video_file, '-i', 'palette-%s.png' % (pad), '-filter_complex', 'fps=%s,scale=%s:-1:flags=lanczos[x];[x][1:v] paletteuse' % (clip_fps, clip_scale), '%s/%s-%s.gif' % (file_basename, file_basename, pad)])
+    os.remove('palette-%s.png' % pad)
+    file_part += 1
+    chunk_step = chunk_step + chunk_size
 
 # Select a random still image from the video
 random_image = random.randint(5, i_duration)
@@ -91,10 +91,10 @@ subprocess.call(['ffmpeg', '-ss', str(random_image), '-i', video_file, '-vframes
 # Dump all the video metadata to a json file
 video_metadata = '%s/%s.json' % (file_basename, file_basename)
 with open(video_metadata, 'w') as f:
-	json_output = subprocess.check_output(['ffprobe', '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', video_file])
-	f.write(json_output)
+    json_output = subprocess.check_output(['ffprobe', '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', video_file])
+    f.write(json_output)
 
 video_md5_file = '%s/%s.md5' % (file_basename, file_basename)
 video_md5_hash = md5(video_file)
 with open(video_md5_file, 'w') as f:
-	f.write(video_md5_hash)
+    f.write(video_md5_hash)
