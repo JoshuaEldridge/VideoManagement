@@ -10,6 +10,7 @@ import os
 import sys
 import argparse
 import random
+import pickle
 
 from helper_functions import *
 
@@ -45,7 +46,6 @@ if args.dir is not None:
 if args.filename is not None:
     if os.path.isfile(args.filename) and os.access(args.filename, os.R_OK):
         video_file = args.filename
-        file_basename = os.path.splitext(video_file)[0]
     else:
             sys.exit('Error: File is not valid or not readable!')
 
@@ -66,47 +66,59 @@ if check_lib('ffmpeg') and check_lib('ffprobe') is None:
 # version of the cache file. TO DO: Pull the file from a remote location.
 hash_set = load_hash_cache(hash_cache_file)
 
+
 # Create the subdirectory for the resulting GIF files and metadata
 # This is the process for a single file:
 if video_file is not None:
-    if not os.path.exists(file_basename):
-        os.mkdir(file_basename)
-    md5 = dump_md5(video_file)
+    file_parts = clean_path(video_file)
+    if not os.path.isdir(file_parts['subdir']):
+        os.mkdir(file_parts['subdir'])
+    md5 = dump_md5(file_parts)
+
     if md5 not in hash_set:
+        video_duration = float(get_video_duration(file_parts).rstrip())
+        detect_scenes(file_parts)
 
-        detect_scenes(video_file, file_basename)
-    
-        if os.path.getsize('%s/%s.ts' % (file_basename, file_basename)) > 0:
-            with open('%s/%s.ts' % (file_basename, file_basename), 'r') as f:
+        if os.path.getsize('%s.ts' % file_parts['subfile']) > 0:
+            with open('%s.ts' % file_parts['subfile'], 'r') as f:
                 for timestamp in f:
-                    create_thumbs(video_file, file_basename, timestamp = timestamp, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale)
+                    timestamp = float(timestamp.rstrip())
+                    print timestamp
+                    if timestamp > (video_duration - clip_duration):
+                        timestamp = (video_duration - clip_duration)
+                        create_thumbs(file_parts, timestamp = timestamp, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale)
         else:
-            create_thumbs(video_file, file_basename, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale)
+            create_thumbs(file_parts, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale)
 
-        dump_md5(video_file, file_basename)
-        dump_video_metadata(video_file, file_basename)
-        # TO DO: Add the hash into the set and cache file
+        dump_md5(file_parts)
+        dump_video_metadata(file_parts)
+        hash_set.add(md5)
+
 else:
     for video_file in files_list:
-        file_basename = os.path.splitext(video_file)[0]
-        print file_basename
-        if not os.path.exists(file_basename):
-            os.mkdir(file_basename)
-        md5 = dump_md5(video_file)
+        file_parts = clean_path(video_file)
+        if not os.path.isdir(file_parts['subdir']):
+            os.mkdir(file_parts['subdir'])
+        md5 = dump_md5(file_parts)
         if md5 not in hash_set:
-            file_part = 1
-            # TO DO: Add logging that a file was not processed as a duplicate
+            part = 1
+            video_duration = float(get_video_duration(file_parts).rstrip())
+            detect_scenes(file_parts)
 
-            detect_scenes(video_file, file_basename)
-
-            if os.path.getsize('%s/%s.ts' % (file_basename, file_basename)) > 0:
-                with open('%s/%s.ts' % (file_basename, file_basename), 'r') as f:
+            if os.path.getsize('%s.ts' % file_parts['subfile']) > 0:
+                with open('%s.ts' % file_parts['subfile'], 'r') as f:
                     for timestamp in f:
-                        create_thumbs(video_file, file_basename, timestamp = timestamp, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale, file_part = file_part)
+                        timestamp = float(timestamp.rstrip())
+                        print timestamp
+                        if timestamp > (video_duration - clip_duration):
+                            timestamp = (video_duration - clip_duration)
+                            create_thumbs(file_parts, timestamp = timestamp, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale, part = part)
             else:
-                create_thumbs(video_file, file_basename, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale, file_part = file_part)
+                create_thumbs(file_parts, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale)
 
-            dump_md5(video_file, file_basename)
-            dump_video_metadata(video_file, file_basename)
-            file_part += 1
-            # TO DO: Add the hash into the set and cache file
+            dump_md5(file_parts)
+            dump_video_metadata(file_parts)
+            part += 1
+            hash_set.add(md5)
+
+pickle.dump(hash_set, open(hash_cache_file, "wb"))
