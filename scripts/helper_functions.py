@@ -61,7 +61,7 @@ def load_hash_cache(cache_file):
     if os.path.isfile(cache_file)  and os.access(cache_file, os.R_OK):
         return pickle.load(open(cache_file, 'r'))
     else:
-        open(cache_file, 'a').close()
+        pickle.dump(set(), open(cache_file, "wb"))
         return set()
 
 def get_video_duration(file_parts):

@@ -24,10 +24,11 @@ group.add_argument('-l', '--list',  help='list of files to process. example: fil
 args = parser.parse_args()
 
 hash_cache_file = '/Users/161619/Git/VideoManagement/scripts/video_hashes.cache'
+debug_mode = False
 
 # FFMPEG Settings
-clip_duration=5
-clip_fps=10
+clip_duration=4
+clip_fps=15
 clip_scale=320
 
 video_directory = None
@@ -64,8 +65,10 @@ if check_lib('ffmpeg') and check_lib('ffprobe') is None:
 # One of the first things we should do is to check the global list of assets
 # to see if we even need to process the file. The first step is to look for a local
 # version of the cache file. TO DO: Pull the file from a remote location.
-hash_set = load_hash_cache(hash_cache_file)
-
+if debug_mode:
+    hash_set = set()
+else:
+    hash_set = load_hash_cache(hash_cache_file)
 
 # Create the subdirectory for the resulting GIF files and metadata
 # This is the process for a single file:
@@ -80,19 +83,22 @@ if video_file is not None:
         detect_scenes(file_parts)
 
         if os.path.getsize('%s.ts' % file_parts['subfile']) > 0:
+            part = 1
             with open('%s.ts' % file_parts['subfile'], 'r') as f:
                 for timestamp in f:
                     timestamp = float(timestamp.rstrip())
-                    print timestamp
                     if timestamp > (video_duration - clip_duration):
                         timestamp = (video_duration - clip_duration)
-                        create_thumbs(file_parts, timestamp = timestamp, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale)
+                    create_thumbs(file_parts, timestamp = timestamp, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale, part = part)
+                    part += 1
         else:
             create_thumbs(file_parts, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale)
 
         dump_md5(file_parts)
         dump_video_metadata(file_parts)
-        hash_set.add(md5)
+#         hash_set.add(md5)
+    else:
+        print "Notice: This video %s was found in the catalog" % file_parts['name']
 
 else:
     for video_file in files_list:
@@ -101,24 +107,23 @@ else:
             os.mkdir(file_parts['subdir'])
         md5 = dump_md5(file_parts)
         if md5 not in hash_set:
-            part = 1
             video_duration = float(get_video_duration(file_parts).rstrip())
             detect_scenes(file_parts)
 
             if os.path.getsize('%s.ts' % file_parts['subfile']) > 0:
+                part = 1
                 with open('%s.ts' % file_parts['subfile'], 'r') as f:
                     for timestamp in f:
                         timestamp = float(timestamp.rstrip())
-                        print timestamp
-                        if timestamp > (video_duration - clip_duration):
-                            timestamp = (video_duration - clip_duration)
-                            create_thumbs(file_parts, timestamp = timestamp, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale, part = part)
+                        create_thumbs(file_parts, timestamp = timestamp, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale, part = part)
+                        part += 1
             else:
                 create_thumbs(file_parts, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale)
 
             dump_md5(file_parts)
             dump_video_metadata(file_parts)
-            part += 1
             hash_set.add(md5)
+        else:
+            print "Notice: This video %s was found in the catalog" % file_parts['name']
 
 pickle.dump(hash_set, open(hash_cache_file, "wb"))
