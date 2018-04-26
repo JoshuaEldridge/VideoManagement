@@ -3,6 +3,7 @@
 # to help determine which ones to filter on.
 
 import os
+import sys
 import subprocess
 #from collections import Counter
 
@@ -34,16 +35,46 @@ def md5(fname):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
 
+# This function will take a file name, fully qualified with path or not
+# and return a three item dictionary of the parts
+# CHANGES WORKING DIRECTORY!
+def navigate(file):
+    file_parts = {}
+    path = os.path.dirname(file)
+    file_parts['filename'] = os.path.basename(file)
+    file_parts['basename'] = os.path.splitext(file_parts['filename'])[0]
+    if path:
+        file_parts['path'] = path
+    else:
+        file_parts['path'] = None
+    return file_parts
+
+def dump_md5(video_file, file_basename = None):
+    file_parts = navigate(video_file)
+#     if file_parts['path']:
+#         os.chdir(file_parts['path'])
+    if file_basename is None:
+        file_basename = file_parts['basename']
+    video_md5_file = '%s/%s.md5' % (file_basename, file_basename)
+    video_md5_hash = md5(video_file)
+    with open(video_md5_file, 'w') as f:
+        f.write(video_md5_hash)
+    return video_md5_hash
+
+def load_hash_cache(cache_file):
+    if os.path.isfile(cache_file)  and os.access(cache_file, os.R_OK):
+        with open(cache_file, 'r') as f:
+            return set([line.rstrip() for line in f])
+    else:
+        return set()
+
 # Probe the video file to detect scene changes, write out the results to a .ts file
 def detect_scenes(video_file, file_basename = None, threshold = 0.4):
-    # Check to see if the file comes in with a system path
-    # if so, handle it properly
-    dirname = os.path.dirname(video_file)
-    filename = os.path.basename(video_file)
-    if dirname is not None:
-        os.chdir(dirname)
+    file_parts = navigate(video_file)
+    if file_parts['path']:
+        os.chdir(file_parts['path'])
     if file_basename is None:
-        file_basename = os.path.splitext(filename)[0]
+        file_basename = file_parts['basename']
     if not os.path.exists(file_basename):
         os.mkdir(file_basename)
     ffprobe_output = subprocess.check_output(['ffprobe', '-hide_banner', '-show_frames', '-print_format', 'compact', '-f', 'lavfi', "movie='%s',select='gt(scene,%f)'" % (video_file, threshold)])
@@ -77,21 +108,6 @@ def dump_video_metadata(video_file, file_basename = None):
         json_output = subprocess.check_output(['ffprobe', '-hide_banner', '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', video_file])
         f.write(json_output)
 
-def dump_md5(video_file, file_basename = None):
-    if file_basename is None:
-        file_basename = os.path.splitext(video_file)[0]
-    video_md5_file = '%s/%s.md5' % (file_basename, file_basename)
-    video_md5_hash = md5(video_file)
-    with open(video_md5_file, 'w') as f:
-        f.write(video_md5_hash)
-    return video_md5_hash
-    
-def load_hash_cache(cache_file):
-    if os.path.isfile(cache_file)  and os.access(cache_file, os.R_OK):
-        with open(cache_file, 'r') as f:
-            return set([line.rstrip() for line in f])
-    else:
-        return set()
 
 # Traverse the directory and count the number of files by their
 # extensions. NOTICE: This excludes any files with a single occurance
