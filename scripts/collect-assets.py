@@ -4,6 +4,7 @@
 # created by the archive-video-scenes.py script
 
 import os
+import shutil
 
 source_dir = "/Volumes/2TB-WD-Elements/DV Library Backup"
 
@@ -14,7 +15,11 @@ for (dirpath, dirnames, filenames) in os.walk(source_dir):
 #     print dirpath, dirnames, filenames
 #     f.extend(filenames)
     for d in dirnames:
-        for i in os.listdir(d):
-            if os.path.isdir(os.path.join(source_dir, d, i)):
-                print os.path.join(source_dir, d, i)
+        dir_path = os.path.join(source_dir, d)
+        for i in os.listdir(dir_path):
+            if os.path.isdir(os.path.join(dir_path, i)):
+                source = os.path.join(dir_path, i)
+                target = os.path.join('/Users/josh/Sites/front-end/images/', i)
+                print source, target
+                shutil.copytree(source, target)
     break

@@ -51,36 +51,32 @@ manual slideshows.
     data-cycle-progressive="#images4"
     >
     <div class="cycle-caption"></div>
-    <img src="images/Reel-100902/Reel-100902-001.png">
+    <img src="images/Reel-1014-01/Reel-1014-01-001.png">
 
     <script id="images4" type="text/cycle">
     [
-        "<img src='images/Reel-100902/Reel-100902-001.gif'>",
-        "<img src='images/Reel-100902/Reel-100902-002.gif'>",
-        "<img src='images/Reel-100902/Reel-100902-003.gif'>",
-        "<img src='images/Reel-100902/Reel-100902-004.gif'>",
-        "<img src='images/Reel-100902/Reel-100902-005.gif'>",
-        "<img src='images/Reel-100902/Reel-100902-006.gif'>",
-        "<img src='images/Reel-100902/Reel-100902-007.gif'>"
+        "<img src='images/Reel-1014-01/Reel-1014-01-001.gif'>",
+        "<img src='images/Reel-1014-01/Reel-1014-01-002.gif'>",
+        "<img src='images/Reel-1014-01/Reel-1014-01-003.gif'>",
+        "<img src='images/Reel-1014-01/Reel-1014-01-004.gif'>",
+        "<img src='images/Reel-1014-01/Reel-1014-01-005.gif'>",
+        "<img src='images/Reel-1014-01/Reel-1014-01-006.gif'>",
+        "<img src='images/Reel-1014-01/Reel-1014-01-007.gif'>"
     ]
     </script>
 
-</div>
-<div class=center>
-    <a href=#><span id=prev>&lt;&lt; Prev</span></a>
-    <a href=#><span id=stop> STOP </span></a>    
-    <a href=#><span id=next>Next &gt;&gt;</span></a>
-</div>
-
 <div id=buttons>
     <button data-cycle-cmd="prev">Prev</button>
+    <button data-cycle-cmd="goto" data-cycle-arg="0">Stop</button>
     <button data-cycle-cmd="next">Next</button>
-    <button data-cycle-cmd="pause">Pause</button>
-    <button data-cycle-cmd="resume">Resume</button>
-    <button data-cycle-cmd="stop">Stop</button>
-    <button data-cycle-cmd="destroy">Destroy</button>
-    <button data-cycle-cmd="goto" data-cycle-arg="0">Goto Slide 0</button>
 </div>
+
+</div>
+
+<?php
+$path = realpath('/Users/josh/Sites/front-end/images');
+foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path)) as $filename) { echo "$filename\n"; }
+?>
 
 </body>
 </html>
