@@ -88,12 +88,13 @@ def create_thumbs(file_parts, clip_duration = 5, clip_fps = 15, clip_scale = 320
     os.remove(os.path.join(file_parts['subdir'], 'palette-%s.png' % (pad)))
     subprocess.call(['ffmpeg', '-hide_banner', '-ss', '%f' % float(timestamp), '-i', file_parts['abs'], '-vframes', '1', '-vf', 'scale=%s:-1' % (clip_scale), '%s-%s.png' % (file_parts['subfile'], pad)])
 
-# Dump all the video metadata to a json file
-def dump_video_metadata(file_parts):
-    video_metadata = '%s.json' % file_parts['subfile']
+# Dump all the video metadata to an export file
+# Available formats are: default, compact, csv, flat, ini, json, xml
+def dump_video_metadata(file_parts, format = 'json'):
+    video_metadata = '%s.%s' % (file_parts['subfile'], format)
     with open(video_metadata, 'w') as f:
-        json_output = subprocess.check_output(['ffprobe', '-hide_banner', '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', file_parts['abs']])
-        f.write(json_output)
+        output = subprocess.check_output(['ffprobe', '-hide_banner', '-v', 'quiet', '-print_format', format, '-show_format', '-show_streams', file_parts['abs']])
+        f.write(output)
 
 
 # Traverse the directory and count the number of files by their

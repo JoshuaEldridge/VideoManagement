@@ -23,7 +23,8 @@ group.add_argument('-l', '--list',  help='list of files to process. example: fil
 
 args = parser.parse_args()
 
-hash_cache_file = '/Users/josh/Git/VideoManagement/scripts/video_hashes.cache'
+home = os.path.expanduser("~")
+hash_cache_file = os.path.join(home, 'Git/VideoManagement/scripts/video_hashes.cache')
 debug_mode = False
 
 # FFMPEG Settings

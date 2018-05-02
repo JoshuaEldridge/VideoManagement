@@ -8,18 +8,19 @@ import shutil
 
 source_dir = "/Volumes/2TB-WD-Elements/DV Library Backup"
 
+home = os.path.expanduser("~")
+
 # print os.listdir(source_dir)
 
 f = []
 for (dirpath, dirnames, filenames) in os.walk(source_dir):
 #     print dirpath, dirnames, filenames
-#     f.extend(filenames)
     for d in dirnames:
         dir_path = os.path.join(source_dir, d)
         for i in os.listdir(dir_path):
             if os.path.isdir(os.path.join(dir_path, i)):
                 source = os.path.join(dir_path, i)
-                target = os.path.join('/Users/josh/Sites/front-end/images/', i)
+                target = os.path.join(home, 'Sites/front-end/images/', i)
                 print source, target
                 shutil.copytree(source, target)
     break
