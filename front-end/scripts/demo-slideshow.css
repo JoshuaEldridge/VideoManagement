@@ -9,8 +9,7 @@
 
 
 .cycle-slideshow { width: 45%; min-width: 200px; max-width: 500px; margin: 10px auto; padding: 0; position: relative;
-    background: url(http://malsup.github.com/images/spinner.gif) 50% 50% no-repeat;
-
+/*     background: url(http://malsup.github.com/images/spinner.gif) 50% 50% no-repeat; */
  }
 
 /* slideshow images (for most of the demos, these are the actual "slides") */
@@ -41,7 +40,7 @@
 
 
 /* caption */
-.cycle-caption { position: absolute; color: white; bottom: 15px; right: 15px; z-index: 700; }
+.cycle-caption { position: absolute; color: white; bottom: 30px; right: 15px; z-index: 700; }
 
 
 /* overlay */
