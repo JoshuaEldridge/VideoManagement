@@ -7,25 +7,20 @@ home = os.path.expanduser("~")
 
 conn = sqlite3.connect(os.path.join(home, 'Git/VideoManagement', 'home-video.db'))
 
+mydir = os.path.join(home, 'Sites/metadata/md5/')
 md5_file = '/Volumes/2TB-WD-Elements/DV Library Backup/Reel 1001/Reel-1001-01/Reel-1001-01.md5'
 json_file = '/Volumes/2TB-WD-Elements/DV Library Backup/Reel 1001/Reel-1001-01/Reel-1001-01.json'
 
+for i in os.listdir(mydir):
+    with open(os.path.join(mydir, i), 'r') as f:
+        md5 = f.read()
+        filename = os.path.basename(i)
+        base, ext = os.path.splitext(filename)
+        
+    sql = '''insert into videos (video_md5, video_filename) values (?, ?)'''
+    print '%s.mov' % base
+    c = conn.cursor()
+    c.execute(sql, (md5, '%s.mov' % base))
 
-with open(md5_file, 'r') as f:
-    md5 = f.read()
-
-print md5
-# with open(json_file) as f:
-#     md = json.load(f)
-# 
-# for i in md['streams']:
-#     print i
-    
-c = conn.cursor()
-
-
-
-# c.execute('''insert into videos
-#                 (video_md5 text, video_filename text, video_length real video_scenes integer, video_format text, video_width integer, video_height integer)''')
-# conn.commit()
+conn.commit()
 conn.close()
