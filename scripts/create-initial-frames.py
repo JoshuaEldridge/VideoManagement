@@ -112,17 +112,12 @@ else:
             detect_scenes(file_parts)
 
             if os.path.getsize('%s.ts' % file_parts['subfile']) > 0:
+                part = 1
                 with open('%s.ts' % file_parts['subfile'], 'r') as f:
-                    for idx, timestamp in enumerate(f, start = 1):
-                        if idx == 1:
-                            if timestamp > clip_duration + 5:
-                                # Grab a beginning frame (this might end up being black in most cases?)
-                                ts_one = 3
-                                create_thumbs(file_parts, timestamp = ts_one, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale, part = idx)
-                                create_thumbs(file_parts, timestamp = timestamp, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale, part = idx)
-                        else:
-                            timestamp = float(timestamp.rstrip())
-                            create_thumbs(file_parts, timestamp = timestamp, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale, part = idx)
+                    for timestamp in f:
+                        timestamp = float(timestamp.rstrip())
+                        create_thumbs(file_parts, timestamp = timestamp, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale, part = part)
+                        part += 1
             else:
                 create_thumbs(file_parts, clip_duration = clip_duration, clip_fps = clip_fps, clip_scale = clip_scale)
 

@@ -17,7 +17,7 @@ function file_ext_strip($filename){
 }
 // Pull out the associated metadata for the video for display.
 
-$db = realpath('/Users/josh/Sites/front-end/home-video.db');
+$db = realpath('/Users/161619/Sites/front-end/home-video.db');
 
 $db = new SQLite3($db, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
 

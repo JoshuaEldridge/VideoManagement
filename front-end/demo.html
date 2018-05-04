@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Video.js | HTML5 Video Player</title>
+
+  <!-- Chang URLs to wherever Video.js files will be hosted -->
+  <link href="video-js/video-js.css" rel="stylesheet" type="text/css">
+  <!-- video.js must be in the <head> for older IEs to work. -->
+  <script src="video-js/video.js"></script>
+
+  <!-- Unless using the CDN hosted version, update the URL to the Flash SWF -->
+  <script>
+    videojs.options.flash.swf = "video-js/video-js.swf";
+  </script>
+    <script>
+    function scrubVideo(t) {
+        var myPlayer = videojs('example_video_1');
+        if(myPlayer.paused()) {
+            myPlayer.currentTime(t)
+            myPlayer.play()
+        } else {
+            myPlayer.currentTime(t)
+        }
+    }
+    </script>
+</head>
+<body>
+
+  <video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="418" height="320"
+      inactivityTimeout=0
+      poster="images/Reel-1001-03/Reel-1001-03-000.png"
+      data-setup='{ "inactivityTimeout": 0 }'>
+    <source src="videos/Reel-1001-03-Fast480p-WebOptimized.mp4" type='video/mp4' />
+    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+  </video>
+
+<a href="#" onclick="scrubVideo(0)"><img src="images/Reel-1001-03/Reel-1001-03-000.png" width="75"></a>
+<a href="#" onclick="scrubVideo(303)"><img src="images/Reel-1001-03/Reel-1001-03-001.png" width="75"></a>
+<a href="#" onclick="scrubVideo(344)"><img src="images/Reel-1001-03/Reel-1001-03-002.png" width="75"></a>
+<a href="#" onclick="scrubVideo(433)"><img src="images/Reel-1001-03/Reel-1001-03-003.png" width="75"></a>
+<a href="#" onclick="scrubVideo(556)"><img src="images/Reel-1001-03/Reel-1001-03-004.png" width="75"></a>
+
+
+</body>
+</html>
