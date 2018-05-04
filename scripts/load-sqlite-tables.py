@@ -8,7 +8,7 @@ import json
 
 home = os.path.expanduser("~")
 
-conn = sqlite3.connect(os.path.join(home, 'Git/VideoManagement', 'home-video.db'))
+conn = sqlite3.connect(os.path.join(home, 'Git/VideoManagement/front-end', 'home-video.db'))
 
 mydir = os.path.join(home, 'Sites/metadata/')
 
@@ -32,6 +32,7 @@ for i in content:
             duration = js["format"]["duration"]
             sql = '''insert into videos (video_md5, video_filename, video_length, video_format, video_width, video_height) values (?, ?, ?, ?, ?, ?)'''
             c = conn.cursor()
+            print('%s %s %s %s %s %s' % (md5, base, duration, codec_name, video_width, video_height))
             c.execute(sql, (md5, '%s.mov' % base, duration, codec_name, video_width, video_height))
         except ValueError as error:
             raise

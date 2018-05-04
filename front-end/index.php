@@ -17,16 +17,20 @@ function file_ext_strip($filename){
 }
 // Pull out the associated metadata for the video for display.
 
-$db = realpath('/Users/161619/Sites/front-end/home-video.db');
+$db = realpath('/Users/josh/Sites/front-end/home-video.db');
 
 $db = new SQLite3($db, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
 
-$results = $db->query('SELECT video_md5, video_filename FROM videos order by video_filename');
+$results = $db->query('SELECT video_md5, video_filename, video_length, video_format, video_width, video_height FROM videos order by video_filename');
 
 while ($r = $results->fetchArray()) {
     $basename = file_ext_strip($r['video_filename']);
     print("<p><a href='video_info.php?vid=" . $basename . "'>" . $r['video_filename'] . "</a><br />");
     print($r['video_md5'] . "<br />");
+//     print($r['video_length'] . "<br />");
+    print(gmdate("H:i:s", $r['video_length']) . "<br />");
+    print($r['video_format'] . "<br />");
+    print($r['video_width'] . "x" . $r['video_height']);
 }
 ?>
 
