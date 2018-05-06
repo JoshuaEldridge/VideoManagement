@@ -5,6 +5,8 @@ from pprint import pprint
 with open('Reel-1001-01.json') as f:
     md = json.load(f)
 
-for i in md['streams']:
-    pprint(i)
-# pprint(md)
+for v in md['format']:
+    print v
+    
+    
+print md['format']['duration']

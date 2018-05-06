@@ -128,8 +128,8 @@ else:
 
             dump_md5(file_parts)
             dump_video_metadata(file_parts)
-            hash_set.add(md5)
+#             hash_set.add(md5)
         else:
             print "Notice: This video %s was found in the catalog" % file_parts['name']
 
-pickle.dump(hash_set, open(hash_cache_file, "wb"))
+# pickle.dump(hash_set, open(hash_cache_file, "wb"))

@@ -6,6 +6,7 @@ import os
 import sys
 import subprocess
 import pickle
+import json
 #from collections import Counter
 
 #folder = "/Volumes/2TB-WD-Elements/DV Library Backup/"
@@ -67,6 +68,11 @@ def load_hash_cache(cache_file):
 def get_video_duration(file_parts):
     return subprocess.check_output(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'default=noprint_wrappers=1:nokey=1', file_parts['abs']])
 
+def read_json_duration(file_parts, field = None):
+    with open('%s.json' % file_parts['subfile'], 'r') as f:
+        md = json.load(f)
+        return md['format']['duration']
+        
 # Probe the video file to detect scene changes, write out the results to a .ts file
 def detect_scenes(file_parts, threshold = 0.4):
     ffprobe_output = subprocess.check_output(['ffprobe', '-hide_banner', '-show_frames', '-print_format', 'compact', '-f', 'lavfi', "movie='%s',select='gt(scene,%f)'" % (file_parts['abs'], threshold)])
@@ -81,12 +87,16 @@ def detect_scenes(file_parts, threshold = 0.4):
                         o.write('%s\n' % ts)
 #                        os.remove('%s.ffmpeg' % file_basename)
 
-def create_thumbs(file_parts, clip_duration = 5, clip_fps = 15, clip_scale = 320, timestamp = 5, part = 1):
+def create_thumbs(file_parts, clip_duration = 5, clip_fps = 15, clip_scale = 320, timestamp = 5, part = 1, mode = "still"):
     pad = '%03d' % part
-    subprocess.call(['ffmpeg', '-hide_banner', '-y', '-ss', '%f' % float(timestamp), '-t', str(clip_duration), '-i', file_parts['abs'], '-vf', 'fps=%s,scale=%s:-1:flags=lanczos,palettegen' % (clip_fps, clip_scale), os.path.join(file_parts['subdir'], 'palette-%s.png' % (pad))])
-    subprocess.call(['ffmpeg', '-hide_banner', '-ss', '%f' % float(timestamp), '-t', str(clip_duration), '-i', file_parts['abs'], '-i', os.path.join(file_parts['subdir'], 'palette-%s.png' % (pad)), '-filter_complex', 'fps=%s,scale=%s:-1:flags=lanczos[x];[x][1:v] paletteuse' % (clip_fps, clip_scale), '%s-%s.gif' % (file_parts['subfile'], pad)])
-    os.remove(os.path.join(file_parts['subdir'], 'palette-%s.png' % (pad)))
-    subprocess.call(['ffmpeg', '-hide_banner', '-ss', '%f' % float(timestamp), '-i', file_parts['abs'], '-vframes', '1', '-vf', 'scale=%s:-1' % (clip_scale), '%s-%s.png' % (file_parts['subfile'], pad)])
+    if mode == "still":
+        # Only produce a single still image
+            subprocess.call(['ffmpeg', '-hide_banner', '-ss', '%f' % float(timestamp), '-i', file_parts['abs'], '-vframes', '1', '-vf', 'scale=%s:-1' % (clip_scale), '%s-%s.png' % (file_parts['subfile'], pad)])
+    else:
+        subprocess.call(['ffmpeg', '-hide_banner', '-y', '-ss', '%f' % float(timestamp), '-t', str(clip_duration), '-i', file_parts['abs'], '-vf', 'fps=%s,scale=%s:-1:flags=lanczos,palettegen' % (clip_fps, clip_scale), os.path.join(file_parts['subdir'], 'palette-%s.png' % (pad))])
+        subprocess.call(['ffmpeg', '-hide_banner', '-ss', '%f' % float(timestamp), '-t', str(clip_duration), '-i', file_parts['abs'], '-i', os.path.join(file_parts['subdir'], 'palette-%s.png' % (pad)), '-filter_complex', 'fps=%s,scale=%s:-1:flags=lanczos[x];[x][1:v] paletteuse' % (clip_fps, clip_scale), '%s-%s.gif' % (file_parts['subfile'], pad)])
+        os.remove(os.path.join(file_parts['subdir'], 'palette-%s.png' % (pad)))
+        subprocess.call(['ffmpeg', '-hide_banner', '-ss', '%f' % float(timestamp), '-i', file_parts['abs'], '-vframes', '1', '-vf', 'scale=%s:-1' % (clip_scale), '%s-%s.png' % (file_parts['subfile'], pad)])
 
 # Dump all the video metadata to an export file
 # Available formats are: default, compact, csv, flat, ini, json, xml
