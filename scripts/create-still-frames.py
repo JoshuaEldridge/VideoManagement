@@ -89,14 +89,11 @@ if video_file is not None:
                 with open('%s.ts' % file_parts['subfile'], 'r') as f:
                     for idx, timestamp in enumerate(f, start = 1):
                         if idx == 1:
-                            if timestamp > clip_duration + 5:
-                                # Grab a beginning frame (this might end up being black in most cases?)
 
-                                create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
-                                create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
+                            create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
+                            create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
 
                         else:
-                            timestamp = float(timestamp.rstrip())
                             create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
         else:
             create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
@@ -122,14 +119,11 @@ else:
                 with open('%s.ts' % file_parts['subfile'], 'r') as f:
                     for idx, timestamp in enumerate(f, start = 1):
                         if idx == 1:
-                            if timestamp > clip_duration + 5:
-                                # Grab a beginning frame (this might end up being black in most cases?)
 
-                                create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
-                                create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
+                            create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
+                            create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
 
                         else:
-                            timestamp = float(timestamp.rstrip())
                             create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
             else:
                 create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
