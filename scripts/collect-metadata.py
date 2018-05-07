@@ -21,8 +21,8 @@ for (dirpath, dirnames, filenames) in os.walk(source_dir):
             if not os.path.isdir(os.path.join(dir_path, i)):
                 filename, file_extension = os.path.splitext(os.path.join(dir_path, i))
 #                 print filename, file_extension
-                if file_extension == '.json':
+                if file_extension == '.ts':
                     source = os.path.join(dir_path, i)
-                    target = os.path.join(home, 'Sites/metadata/md5/', i)
+                    target = os.path.join(home, 'Sites/metadata/ts/', i)
                     shutil.copyfile(source, target)
 #     break

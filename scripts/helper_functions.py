@@ -70,8 +70,8 @@ def get_video_duration(file_parts):
 
 def read_json_duration(file_parts, field = None):
     with open('%s.json' % file_parts['subfile'], 'r') as f:
-        md = json.load(f)
-        return md['format']['duration']
+        js = json.load(f)
+        return js['format']['duration']
         
 # Probe the video file to detect scene changes, write out the results to a .ts file
 def detect_scenes(file_parts, threshold = 0.4):

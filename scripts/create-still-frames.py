@@ -6,8 +6,6 @@ import subprocess
 import os
 import sys
 import argparse
-import random
-import pickle
 import json
 
 from helper_functions import *
@@ -22,8 +20,6 @@ group.add_argument('-l', '--list',  help='list of files to process. example: fil
 args = parser.parse_args()
 
 home = os.path.expanduser("~")
-hash_cache_file = os.path.join(home, 'Git/VideoManagement/scripts/video_hashes.cache')
-debug_mode = True
 
 # FFMPEG Settings
 clip_scale='627:480'
@@ -62,72 +58,36 @@ if args.list is not None:
 if check_lib('ffmpeg') and check_lib('ffprobe') is None:
     sys.exit('Error: This script requires ffmpeg and ffprobe libraries be available in the $PATH!')
 
-# One of the first things we should do is to check the global list of assets
-# to see if we even need to process the file. The first step is to look for a local
-# version of the cache file. TO DO: Pull the file from a remote location.
-if debug_mode:
-    hash_set = set()
-else:
-    hash_set = load_hash_cache(hash_cache_file)
-
-# Create the subdirectory for the resulting GIF files and metadata
 # This is the process for a single file:
 if video_file is not None:
     file_parts = clean_path(video_file)
-    if not os.path.isdir(file_parts['subdir']):
-        os.mkdir(file_parts['subdir'])
-#     md5 = dump_md5(file_parts)
-    md5 = ''
+    video_duration = read_json_duration(file_parts)
+    if os.path.getsize('%s.ts' % file_parts['subfile']) > 0:
+        with open('%s.ts' % file_parts['subfile'], 'r') as f:
+            for idx, timestamp in enumerate(f, start = 1):
+                if idx == 1:
 
-    if md5 not in hash_set:
-#         video_duration = float(get_video_duration(file_parts).rstrip())
-        video_duration = read_json_duration(file_parts)
-# Should be able to use the existing ts files
-#         detect_scenes(file_parts)
+                    create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
+                    create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
 
-        if os.path.getsize('%s.ts' % file_parts['subfile']) > 0:
-                with open('%s.ts' % file_parts['subfile'], 'r') as f:
-                    for idx, timestamp in enumerate(f, start = 1):
-                        if idx == 1:
-
-                            create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
-                            create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
-
-                        else:
-                            create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
-        else:
-            create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
-
+                else:
+                    create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
     else:
-        print "Notice: This video %s was found in the catalog" % file_parts['name']
+        create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
 
 else:
     for video_file in files_list:
         file_parts = clean_path(video_file)
-        if not os.path.isdir(file_parts['subdir']):
-            os.mkdir(file_parts['subdir'])
-#         md5 = dump_md5(file_parts)
-        md5 = ''
-        if md5 not in hash_set:
-#             video_duration = float(get_video_duration(file_parts).rstrip())
-            video_duration = read_json_duration(file_parts)
+        video_duration = read_json_duration(file_parts)
+        if os.path.getsize('%s.ts' % file_parts['subfile']) > 0:
+            with open('%s.ts' % file_parts['subfile'], 'r') as f:
+                for idx, timestamp in enumerate(f, start = 1):
+                    if idx == 1:
 
-# Should be able to use the existing ts files
-#             detect_scenes(file_parts)
+                        create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
+                        create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
 
-            if os.path.getsize('%s.ts' % file_parts['subfile']) > 0:
-                with open('%s.ts' % file_parts['subfile'], 'r') as f:
-                    for idx, timestamp in enumerate(f, start = 1):
-                        if idx == 1:
-
-                            create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
-                            create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
-
-                        else:
-                            create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
-            else:
-                create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
-
+                    else:
+                        create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
         else:
-            print "Notice: This video %s was found in the catalog" % file_parts['name']
-
+            create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
