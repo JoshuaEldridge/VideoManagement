@@ -8,7 +8,7 @@ import json
 s_camera_name = "Canon GL1"
 home = os.path.expanduser("~")
 
-conn = sqlite3.connect(os.path.join(home, 'Git/VideoManagement', 'home-video.db'))
+conn = sqlite3.connect(os.path.join(home, 'Git/VideoManagement/video-library', 'home-video.db'))
 
 mydir = os.path.join(home, 'Sites/metadata/')
 

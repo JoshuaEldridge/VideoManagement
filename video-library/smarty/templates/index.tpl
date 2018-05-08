@@ -3,6 +3,11 @@
 <body>
 
 {foreach $source_videos as $video}
+<div class="main-container">
+<h1>{$video.s_filename|substr:0:-4}</h1>
+<div class="poster">
+<img src="images/{$video.s_filename|substr:0:-4}/{$video.s_filename|substr:0:-4}-000.png" width="320">
+</div>
 <div class="video-info">
     {$video.s_md5}<br>
     <a href="video.php?source_id={$video.source_id}">{$video.s_filename}</a><br>
@@ -22,6 +27,8 @@
     {$video.s_month}<br>
     {$video.s_day}<br>
     {$video.s_archive}<br>
+</div>
+
 </div>
 {/foreach}
 

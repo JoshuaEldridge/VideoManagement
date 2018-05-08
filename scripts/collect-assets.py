@@ -20,7 +20,7 @@ for (dirpath, dirnames, filenames) in os.walk(source_dir):
         for i in os.listdir(dir_path):
             if os.path.isdir(os.path.join(dir_path, i)):
                 source = os.path.join(dir_path, i)
-                target = os.path.join(home, 'Sites/front-end/images/', i)
+                target = os.path.join(home, 'Git/VideoManagement/video-library/images/', i)
                 print source, target
                 shutil.copytree(source, target)
     break

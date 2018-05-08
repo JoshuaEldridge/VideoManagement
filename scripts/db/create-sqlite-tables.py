@@ -3,7 +3,7 @@ import sqlite3
 import os
 
 home = os.path.expanduser("~")
-conn = sqlite3.connect(os.path.join(home, 'Git/VideoManagement', 'home-video.db'))
+conn = sqlite3.connect(os.path.join(home, 'Git/VideoManagement/video-library', 'home-video.db'))
 
 c = conn.cursor()
 

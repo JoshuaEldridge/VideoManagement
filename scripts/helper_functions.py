@@ -91,7 +91,7 @@ def create_thumbs(file_parts, clip_duration = 5, clip_fps = 15, clip_scale = 320
     pad = '%03d' % part
     if mode == "still":
         # Only produce a single still image
-            subprocess.call(['ffmpeg', '-hide_banner', '-ss', '%f' % float(timestamp), '-i', file_parts['abs'], '-vframes', '1', '-vf', 'scale=%s:-1' % (clip_scale), '%s-%s.png' % (file_parts['subfile'], pad)])
+            subprocess.call(['ffmpeg', '-hide_banner', '-ss', '%f' % float(timestamp), '-i', file_parts['abs'], '-vframes', '1', '-vf', 'yadif,scale=%s:-1' % (clip_scale), '%s-%s.png' % (file_parts['subfile'], pad)])
     else:
         subprocess.call(['ffmpeg', '-hide_banner', '-y', '-ss', '%f' % float(timestamp), '-t', str(clip_duration), '-i', file_parts['abs'], '-vf', 'fps=%s,scale=%s:-1:flags=lanczos,palettegen' % (clip_fps, clip_scale), os.path.join(file_parts['subdir'], 'palette-%s.png' % (pad))])
         subprocess.call(['ffmpeg', '-hide_banner', '-ss', '%f' % float(timestamp), '-t', str(clip_duration), '-i', file_parts['abs'], '-i', os.path.join(file_parts['subdir'], 'palette-%s.png' % (pad)), '-filter_complex', 'fps=%s,scale=%s:-1:flags=lanczos[x];[x][1:v] paletteuse' % (clip_fps, clip_scale), '%s-%s.gif' % (file_parts['subfile'], pad)])

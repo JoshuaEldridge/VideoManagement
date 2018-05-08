@@ -22,7 +22,8 @@ args = parser.parse_args()
 home = os.path.expanduser("~")
 
 # FFMPEG Settings
-clip_scale='627:480'
+poster_scale='627:480'
+thumb_scale='314:240'
 clip_duration=1
 clip_start=5
 clip_offset=1
@@ -65,15 +66,16 @@ if video_file is not None:
     if os.path.getsize('%s.ts' % file_parts['subfile']) > 0:
         with open('%s.ts' % file_parts['subfile'], 'r') as f:
             for idx, timestamp in enumerate(f, start = 1):
+                timestamp = float(timestamp) + float(0.2)
                 if idx == 1:
 
-                    create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
-                    create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
+                    create_thumbs(file_parts, clip_scale = poster_scale, mode="still", timestamp = clip_start, part = 0)
+                    create_thumbs(file_parts, clip_scale = thumb_scale, mode="still", timestamp = timestamp, part = idx)
 
                 else:
-                    create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
+                    create_thumbs(file_parts, clip_scale = thumb_scale, mode="still", timestamp = timestamp, part = idx)
     else:
-        create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
+        create_thumbs(file_parts, clip_scale = poster_scale, mode="still", timestamp = clip_start, part = 0)
 
 else:
     for video_file in files_list:
@@ -82,12 +84,13 @@ else:
         if os.path.getsize('%s.ts' % file_parts['subfile']) > 0:
             with open('%s.ts' % file_parts['subfile'], 'r') as f:
                 for idx, timestamp in enumerate(f, start = 1):
+                    timestamp = float(timestamp) + float(0.2)
                     if idx == 1:
 
-                        create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
-                        create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
+                        create_thumbs(file_parts, clip_scale = poster_scale, mode="still", timestamp = clip_start, part = 0)
+                        create_thumbs(file_parts, clip_scale = thumb_scale, mode="still", timestamp = timestamp, part = idx)
 
                     else:
-                        create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = timestamp, part = idx)
+                        create_thumbs(file_parts, clip_scale = thumb_scale, mode="still", timestamp = timestamp, part = idx)
         else:
-            create_thumbs(file_parts, clip_scale = clip_scale, mode="still", timestamp = clip_start, part = 0)
+            create_thumbs(file_parts, clip_scale = poster_scale, mode="still", timestamp = clip_start, part = 0)

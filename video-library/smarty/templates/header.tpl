@@ -10,7 +10,7 @@
   </script>
     <script>
     function scrubVideo(t) {
-        var t = t + 0.1
+        var t = t + 0.2
         var myPlayer = videojs('example_video_1');
         if(myPlayer.paused()) {
             myPlayer.currentTime(t)
