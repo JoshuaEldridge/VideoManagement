@@ -14,7 +14,7 @@ home = os.path.expanduser("~")
 
 f = []
 for (dirpath, dirnames, filenames) in os.walk(source_dir):
-#     print dirpath, dirnames, filenames
+    print dirpath, dirnames, filenames
     for d in dirnames:
         dir_path = os.path.join(source_dir, d)
         for i in os.listdir(dir_path):

@@ -28,8 +28,10 @@ c.execute('''CREATE TABLE source_videos
                     s_year integer,
                     s_month integer,
                     s_day integer,
-                    s_archive boolean,
-                    s_camera_name text)''')
+                    s_archive_location boolean,
+                    s_camera_name text,
+                    s_scene_id_poster integer,
+                    s_active boolean)''')
 
 c.execute('''CREATE TABLE edited_videos
                 (edited_id integer primary key,
