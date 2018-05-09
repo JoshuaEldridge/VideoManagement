@@ -13,12 +13,14 @@
     <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
   </video>
 
-<form>
+<form action="edit-video.php" method="post">
 {foreach from=$video_fields item=field_value key=field_name}
 
 {$field_name}: <input type="text" name="{$field_name}" value="{$field_value}"></br>
 
 {/foreach}
+<input type="submit" value="submit">
+</form>
 </div>
 
 
