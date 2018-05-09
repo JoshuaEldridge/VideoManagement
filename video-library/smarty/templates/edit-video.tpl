@@ -1,7 +1,7 @@
 {include file="header.tpl" title="Video Detail Page"}
 
 <body>
-<h1>{$folder}</h1>
+
 <div class="main-container">
   <video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="418" height="320"
       inactivityTimeout=0

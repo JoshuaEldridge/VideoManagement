@@ -1,3 +1,26 @@
-body { background-color: white }
-.main-container { position: relative; width: 420px; }
-.poster { position: relative; }
+body {
+    background-color: white
+
+}
+.main-container {
+    position: relative;
+    margin: auto;
+    width: 800px;
+    clear: both;
+}
+.poster {
+    position: relative;
+    float: left;
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: lightgrey;
+}
+.video-info {
+    position: relative;
+    float: left;
+    padding: 20px;
+    margin: 0px 10px 10px 20px;
+    border-left: 3px solid black;
+    background-color: lightgrey;
+}

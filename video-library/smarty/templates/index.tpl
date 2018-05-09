@@ -4,13 +4,9 @@
 
 {foreach $source_videos as $video}
 <div class="main-container">
-<h1>{$video.s_filename|substr:0:-4}</h1>
-<div class="poster">
-<img src="images/{$video.s_filename|substr:0:-4}/{$video.s_filename|substr:0:-4}-000.png" width="320">
-</div>
-<div class="video-info">
-    {$video.s_md5}<br>
+<h1>{$video.s_filename|substr:0:-4}</h1><div class="video-info">
     <a href="video.php?source_id={$video.source_id}">{$video.s_filename}</a><br>
+    {$video.s_md5}<br>
     {$video.s_codec_name}<br>
     {$video.s_codec_long}<br>
     {$video.s_codec_tag}<br>
@@ -28,7 +24,9 @@
     {$video.s_day}<br>
     {$video.s_archive}<br>
 </div>
-
+<div class="poster">
+<img src="images/{$video.s_filename|substr:0:-4}/{$video.s_filename|substr:0:-4}-000.png" width="320">
+</div>
 </div>
 {/foreach}
 
