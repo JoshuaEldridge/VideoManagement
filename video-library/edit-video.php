@@ -16,7 +16,6 @@ $smarty->setConfigDir('smarty/configs');
 
 
 $source_id = htmlspecialchars($_GET["source_id"]);
-$process = htmlspecialchars($_GET["submit"]);
 
 /*
 * Set up the database connection
@@ -26,25 +25,25 @@ $db = newAdoConnection($driver);
 $db->connect('home-video.db','','','');
 $db->debug = True;
 
-if(isset($process) && isset($source_id)) {
+echo "<pre>";
+print_r($_REQUEST);
+echo "</pre>";
+
+if(isset($_GET["submit"]) && isset($_GET["source_id"])) {
     // $video_scenes = $db->getRow("select * from source_scenes where source_id = ? order by scene_ts", array($source_id));
     // $video_fields = $db->getRow("select * from source_videos where source_id = ?", array($source_id));
-//     $video_fields = new source_video();
-//     $video_fields->update_video_fields($db, $_REQUEST);
-//     $video_fields->get_video();
-//     $smarty->assign('video_fields', $video_fields->get_video());
+    $video_fields = new source_video();
+    $video_fields->update_video_fields($db, $_REQUEST);
+//    $video_fields->get_video();
+    $smarty->assign('video_fields', $video_fields->get_video());
 //     $smarty->assign('video_scenes', $video_scenes);
 //     print_r($video_fields);
-// 
+
 //     extract($_REQUEST);
 //     echo $source_id;
 //     echo $s_filename;
-// 
-//     foreach($_REQUEST as $k=>$v) {
-//         print $k . ":" . $v . "<br>\n";
-//     }
 
-// } elseif (isset($source_id)) {
+ } else {
     $video_fields = new source_video();
     $video_fields->load_video_from_db($db, $source_id);
 //     $video_fields->get_video();

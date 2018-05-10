@@ -5,6 +5,7 @@
 {foreach $source_videos as $video}
 <div class="main-container">
 <h1>{$video.s_filename|substr:0:-4}</h1><div class="video-info">
+    <a href="edit-video.php?source_id={$video.source_id}" style="float: right">Edit</a>
     <a href="video.php?source_id={$video.source_id}">{$video.s_filename}</a><br>
     {$video.s_md5}<br>
     {$video.s_codec_name}<br>

@@ -19,7 +19,7 @@
 {$field_name}: <input type="text" name="{$field_name}" value="{$field_value}"></br>
 
 {/foreach}
-<input type="submit" value="submit">
+<input type="submit" name="submit" value="submit">
 </form>
 </div>
 

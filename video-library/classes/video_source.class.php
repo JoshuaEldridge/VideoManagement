@@ -10,7 +10,7 @@ class source_video {
     function update_video_fields($db, $fields) {
         $this->load($fields);
         $table = 'source_videos';
-        $db->autoExecute($table, $this, 'UPDATE', 'source_id = ' . $this->source_id);
+        $db->autoExecute($table, $fields, 'UPDATE', 'source_id = ' . $this->source_id);
     }
 
     function load_video_from_db($db, $source_id) {
