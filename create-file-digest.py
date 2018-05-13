@@ -5,11 +5,11 @@ import os
 import hashlib
 import platform
 from datetime import datetime
-import subprocess
 
-video_dir = '/Users/josh/Movies/Zi8-Downloaded Videos/'
-csv_logfile = video_dir + 'video_file_hashes.csv'
-csv_logfile_header = ['MD5 Hash', 'Host', 'File Location', 'File Name', 'File Date', 'Video Metadata Date']
+
+video_dir = '/Volumes/HTS-1.5TB/Home Video/VHS CAPTURE/LifeFlix'
+csv_logfile = os.path.join(video_dir, 'video_file_hashes.csv')
+csv_logfile_header = ['MD5 Hash', 'Host', 'File Location', 'File Name', 'File Date']
 
 def creation_date(path_to_file):
     """
@@ -42,8 +42,8 @@ with open(csv_logfile, 'a+') as f:
 	csv_writer.writerow(csv_logfile_header)
 	
 	for file in os.listdir(video_dir):
+
 		if file.endswith(".mov"):
 			path = os.path.join(video_dir, file)
-			md_date = subprocess.check_output(['ffprobe', '-v', 'quiet', path, '-print_format', 'compact', '-show_entries', 'format_tags=creation_time'])
-			md_date = md_date.strip().split('format|tag:creation_time=')[1]
-			csv_writer.writerow([md5(path), 'Betty', video_dir, file, creation_date(path), md_date])
+			csv_writer.writerow([md5(path), 'Betty', video_dir, file, creation_date(path)])
+			print("Wrote: %s, %s, %s, %s, %s" % (md5(path), 'Betty', video_dir, file, creation_date(path)))
