@@ -12,6 +12,7 @@
   </video>
 
 {foreach $static_images as $image}
+    {$image.scene_id}
     <a href="#" onclick="scrubVideo({$image.scene_ts})"><img src="images/{$folder}/{$image.scene_image}" width="75"></a>
 {/foreach}
 </div>

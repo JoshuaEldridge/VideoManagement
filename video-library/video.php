@@ -33,7 +33,7 @@ $video_filename = str_replace('.mov', '.mp4', $video_filename);
 
 $folder = substr($video_filename, 0, -4);
 
-$static_images = $db->getAll("select scene_image, scene_ts from source_scenes where source_id = ? order by scene_ts", array($source_id));
+$static_images = $db->getAll("select scene_image, scene_id, scene_ts from source_scenes where source_id = ? order by scene_ts", array($source_id));
 
 // print_r($static_images);
 
