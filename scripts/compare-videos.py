@@ -36,16 +36,12 @@ for i in contents:
     pieces = [x.strip() for x in i.split(',')]
 
     if pieces[0] in known_md5s:
-        print("Found %s in Library" % pieces[0])
+#         print("Found %s in Library" % pieces[0])
+        pass
     else:
-        print("%s not Found" % i)
+#         print("%s not Found" % i)
+        print(i.split(",")[3])
 
 
 conn.commit()
 conn.close()
-
-with open(filename) as f:
-    content = f.read().splitlines()
-
-
-

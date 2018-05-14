@@ -18,7 +18,7 @@ def find_my_files(dir, exts = ('.dv', '.mov', '.mpg', '.avi', '.mp4', '.m4v', '.
     matches = []
     for root, dirnames, filenames in os.walk(dir):
         for filename in filenames:
-            if filename.endswith(exts):
+            if filename.lower().endswith(exts):
                 matches.append(os.path.join(root, filename))
     return matches
 
@@ -39,7 +39,6 @@ def md5(fname):
 
 # This function will take a file name, fully qualified with path or not
 # and return a three item dictionary of the parts
-# CHANGES WORKING DIRECTORY!
 def clean_path(file):
     file_parts = {}
     file_parts['abs'] = os.path.normpath(os.path.join(os.getcwd(), file))
@@ -105,6 +104,12 @@ def dump_video_metadata(file_parts, format = 'json'):
     with open(video_metadata, 'w') as f:
         output = subprocess.check_output(['ffprobe', '-hide_banner', '-v', 'quiet', '-print_format', format, '-show_format', '-show_streams', file_parts['abs']])
         f.write(output)
+
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
 
 
 # Traverse the directory and count the number of files by their
