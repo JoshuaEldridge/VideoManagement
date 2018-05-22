@@ -2,8 +2,11 @@
 from __future__ import print_function
 import os
 import sys
+import datetime
 import argparse
-import sqlite3
+# import sqlite3
+import csv
+
 from helper_functions import *
 
 parser = argparse.ArgumentParser()
@@ -13,14 +16,7 @@ parser.add_argument('-e', '--ext',  help='file extensions to match against. (".j
 
 args = parser.parse_args()
 
-home = os.path.expanduser("~")
-
-def dict_factory(cursor, row):
-    d = {}
-    for idx, col in enumerate(cursor.description):
-        d[col[0]] = row[idx]
-    return d
-    
+now = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 home = os.path.expanduser("~")
 
 if os.path.isdir(args.dir) and os.access(args.dir, os.W_OK):
@@ -29,11 +25,17 @@ if os.path.isdir(args.dir) and os.access(args.dir, os.W_OK):
 else:
     sys.exit('Error: Directory is not valid or is not writable!')
 
+header_row = ['File Name', 'File Path', 'md5']
 
-for video_file in files_list:
-    file_parts = clean_path(video_file)
-    md5_digest = md5(file_parts['abs'])
-    print(file_parts, md5_digest)
+with open(os.path.join(files_directory, '%s.hashes.csv' % now), 'wb') as f:
+    writer = csv.writer(f, quoting=csv.QUOTE_ALL)
+    writer.writerow(header_row)
+
+    for video_file in files_list:
+        file_parts = clean_path(video_file)
+        if file_parts['abs'].lower().endswith(args.ext):
+            md5_digest = md5(file_parts['abs'])
+            writer.writerow([file_parts['file'], file_parts['abs'], md5_digest])
 
 # conn = sqlite3.connect(os.path.join(home, 'Git/VideoManagement/video-library', 'home-video.db'))
 # conn.row_factory = dict_factory
