@@ -7,6 +7,7 @@ import argparse
 # import sqlite3
 # import csv
 
+start_time = datetime.datetime.now()
 from helper_functions import *
 
 parser = argparse.ArgumentParser()
@@ -26,6 +27,8 @@ if os.path.isdir(args.dir) and os.access(args.dir, os.W_OK):
 else:
     sys.exit('Error: Directory is not valid or is not writable!')
 
+print("started hash file creation at: %s" % str(start_time))
+counter = 1
 if args.out == 'csv':
     import csv 
 
@@ -35,11 +38,13 @@ if args.out == 'csv':
         writer = csv.writer(f, quoting=csv.QUOTE_ALL)
         writer.writerow(header_row)
 
-        for video_file in files_list:
-            file_parts = clean_path(video_file)
+        for file in files_list:
+            file_parts = clean_path(file)
             if file_parts['abs'].lower().endswith(args.ext):
                 md5_digest = md5(file_parts['abs'])
                 writer.writerow([file_parts['file'], file_parts['abs'], md5_digest])
+                print("%s. %s, %s" % (counter, file_parts['file'], md5_digest))
+                counter += 1
 
 # if args.out == 'sqlite':
 #     import sqlite3
@@ -74,3 +79,5 @@ if args.out == 'csv':
 # 
 #     conn.commit()
 #     conn.close()
+
+print("script completed in %s" % (datetime.datetime.now()-start_time))
