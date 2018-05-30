@@ -7,7 +7,7 @@ import sys
 import subprocess
 import pickle
 import json
-#from collections import Counter
+from collections import Counter
 
 #folder = "/Volumes/2TB-WD-Elements/DV Library Backup/"
 
@@ -21,6 +21,16 @@ def find_my_files(dir, exts = ('.dv', '.mov', '.mpg', '.avi', '.mp4', '.m4v', '.
             if filename.lower().endswith(exts):
                 matches.append(os.path.join(root, filename))
     return matches
+
+# This will recursively scan all files in a given directory
+# and return a list sorted by the number of occurrences for all present
+# file extensions.
+def scan_extensions(dir):
+    file_extensions = []
+    for root, dirnames, filenames in os.walk(dir):
+        for filename in filenames:
+            file_extensions.append(os.path.splitext(filename)[1])
+        return Counter(file_extensions).most_common()
 
 # Simply check to see if the libraries are found on the system
 # and are executable
@@ -39,6 +49,7 @@ def md5(fname):
 
 # This function will take a file name, fully qualified with path or not
 # and return a three item dictionary of the parts
+# {'name': '20141128135003', 'abs': '/Volumes/2TB-WD-Elements/Photos/Pictures-Backup/20141128135003.jpg', 'subdir': '/Volumes/2TB-WD-Elements/Photos/Pictures-Backup/20141128135003', 'file': '20141128135003.jpg', 'subfile': '/Volumes/2TB-WD-Elements/All Photos/Josh-Phone-Pictures-Backup/20141128135003/20141128135003', 'dir': '/Volumes/2TB-WD-Elements/All Photos/Josh-Phone-Pictures-Backup'}
 def clean_path(file):
     file_parts = {}
     file_parts['abs'] = os.path.normpath(os.path.join(os.getcwd(), file))
@@ -111,6 +122,12 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
+def sizeof_fmt(num, suffix='B'):
+    for unit in ['','Ki','Mi','Gi','Ti','Pi','Ei','Zi']:
+        if abs(num) < 1024.0:
+            return "%3.1f%s%s" % (num, unit, suffix)
+        num /= 1024.0
+    return "%.1f%s%s" % (num, 'Yi', suffix)
 
 # Traverse the directory and count the number of files by their
 # extensions. NOTICE: This excludes any files with a single occurance
