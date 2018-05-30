@@ -12,7 +12,7 @@ from helper_functions import *
 parser = argparse.ArgumentParser()
 
 parser.add_argument('-d', '--dir',  help='path to a directory. example: /Volumes/2TB-WD-Elements/DV Library Backup/')
-parser.add_argument('-e', '--ext',  help='file extensions to match against. (".jpg", ".gif")')
+parser.add_argument('-e', '--ext',  help='file extensions to match against. Must be a single extension or a tuple of extensions: (".jpg", ".gif")')
 
 args = parser.parse_args()
 
