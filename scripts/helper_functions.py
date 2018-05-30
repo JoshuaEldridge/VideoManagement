@@ -129,16 +129,21 @@ def sizeof_fmt(num, suffix='B'):
         num /= 1024.0
     return "%.1f%s%s" % (num, 'Yi', suffix)
 
-# Traverse the directory and count the number of files by their
-# extensions. NOTICE: This excludes any files with a single occurance
-# 
-# ListFiles = os.walk(folder)
-# SplitTypes = []
-# for walk_output in ListFiles:
-#     for file_name in walk_output[-1]:
-#         SplitTypes.append(file_name.split(".")[-1])
-# 
-# counter = Counter(SplitTypes)
-# for k, v in counter.items():
-#     if v > 1:
-#         print k, v
+#     Traverse the directory and count the number of files by their
+#     extensions. NOTICE: This excludes any files with a single occurrence
+def investigate_filetypes(dir, threshold = 0):
+    ListFiles = os.walk(dir)
+    SplitTypes = []
+    for walk_output in ListFiles:
+        for file_name in walk_output[-1]:
+            SplitTypes.append(file_name.split(".")[-1])
+
+    counter = Counter(SplitTypes)
+    for k, v in counter.items():
+        if v > threshold:
+            print k, v
+
+def format_seconds(sec):
+    m, s = divmod(sec, 60)
+    h, m = divmod(m, 60)
+    return "%d:%02d:%02d" % (h, m, s)
