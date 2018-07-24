@@ -25,7 +25,7 @@ args = parser.parse_args()
 
 home = os.path.expanduser("~")
 hash_cache_file = os.path.join(home, 'Git/VideoManagement/scripts/video_hashes.cache')
-debug_mode = False
+debug_mode = True
 
 # FFMPEG Settings
 clip_duration=4
@@ -97,7 +97,7 @@ if video_file is not None:
 
         dump_md5(file_parts)
         dump_video_metadata(file_parts)
-#         hash_set.add(md5)
+        hash_set.add(md5)
     else:
         print "Notice: This video %s was found in the catalog" % file_parts['name']
 
@@ -128,7 +128,7 @@ else:
 
             dump_md5(file_parts)
             dump_video_metadata(file_parts)
-#             hash_set.add(md5)
+            hash_set.add(md5)
         else:
             print "Notice: This video %s was found in the catalog" % file_parts['name']
 

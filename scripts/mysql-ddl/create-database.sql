@@ -55,8 +55,7 @@ CREATE TABLE photos (
     PRIMARY KEY (photo_id)
 );
 /* INSERT INTO photos (md5, image_name, exif, year, month, day) VALUES ('3a909cdb4e555b8ec0a56a2905532c1b', 'IMG_5370.JPG', 
-
-'[{
+'{
   "SourceFile": "IMG_5369.JPG",
   "ExifToolVersion": 10.99,
   "FileName": "IMG_5369.JPG",
@@ -138,5 +137,6 @@ CREATE TABLE photos (
   "FocalLength35efl": "4.2 mm (35 mm equivalent: 39.0 mm)",
   "HyperfocalDistance": "2.45 m",
   "LightValue": 12.2
-}]', 2018, 1, 31
+}', 2018, 1, 31
 );
+*/
